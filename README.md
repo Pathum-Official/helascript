@@ -1,8 +1,21 @@
-# 🇱🇰 HelaScript (`.hela`)
+<p align="center">
+  <img src="./assets/logo/hela-logo-full.png" alt="HelaScript Logo" width="240"/>
+</p>
 
-> **ස්වභාවික සිංහල ක්‍රමලේඛන භාෂාව (A Modern, Spoken-Sinhala Programming Language Engine)**
+<h1 align="center">HelaScript (හෙළස්ක්‍රිප්ට්)</h1>
 
-HelaScript is a full-fledged, AI-native programming language engine built in TypeScript and running on Node.js. It features a custom **Unicode-aware Lexer**, **Recursive Descent AST Parser**, **AST Evaluator / Runtime**, **Node.js/NPM Interoperability**, and **natural spoken Sinhala error diagnostics**.
+<p align="center">
+  <b>ස්වභාවික සිංහල ක්‍රමලේඛන භාෂාව (A Modern, Spoken-Sinhala Programming Language Engine)</b>
+</p>
+
+<p align="center">
+  <a href="#-key-features"><img src="https://img.shields.io/badge/Language-Sinhala-blue.svg" alt="Sinhala Language"/></a>
+  <a href="#-running-tests"><img src="https://img.shields.io/badge/Tests-27%20Passing-brightgreen.svg" alt="Tests"/></a>
+  <a href="https://github.com/Pathum-Official/helascript/releases"><img src="https://img.shields.io/badge/Release-v1.0.0-orange.svg" alt="Release"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License"/></a>
+</p>
+
+HelaScript is a full-fledged programming language engine built in TypeScript and running on Node.js. It features a custom **Unicode-aware Lexer**, **Recursive Descent AST Parser**, **AST Evaluator / Runtime**, **Node.js/NPM Interoperability**, and **natural spoken Sinhala error diagnostics**.
 
 ---
 

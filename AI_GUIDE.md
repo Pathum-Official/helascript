@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/logo/hela-logo-full.png" alt="HelaScript Logo" width="220"/>
+</p>
+
 # 📜 HelaScript (.hela) Documentation & AI Guide
 
 HelaScript is a modern, AI-native, spoken-Sinhala-based programming language/DSL designed to bridge natural human thought with high-performance software execution.

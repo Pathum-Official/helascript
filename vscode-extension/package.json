@@ -1,6 +1,6 @@
 {
   "name": "helascript-vscode",
-  "displayName": "HelaScript",
+  "displayName": "HelaScript Spoken-Sinhala Syntax",
   "description": "Rich syntax highlighting and language support for HelaScript (.hela) spoken-Sinhala programming language",
   "version": "1.0.0",
   "publisher": "Pathum-Official",
