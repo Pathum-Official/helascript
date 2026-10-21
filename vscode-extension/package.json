@@ -1,0 +1,37 @@
+{
+  "name": "helascript-vscode",
+  "displayName": "HelaScript",
+  "description": "Rich syntax highlighting and language support for HelaScript (.hela) spoken-Sinhala programming language",
+  "version": "1.0.0",
+  "publisher": "Pathum-Official",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "icon": "icon.png",
+  "contributes": {
+    "languages": [
+      {
+        "id": "helascript",
+        "aliases": [
+          "HelaScript",
+          "hela",
+          "හෙළස්ක්‍රිප්ට්"
+        ],
+        "extensions": [
+          ".hela"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "helascript",
+        "scopeName": "source.hela",
+        "path": "./syntaxes/helascript.tmLanguage.json"
+      }
+    ]
+  }
+}

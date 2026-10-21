@@ -47,6 +47,15 @@ fs.copyFileSync(process.execPath, targetPath);
 
 // 5. Inject blob using postject
 console.log(`💉 Step 4: Injecting blob into ${binaryName}...`);
+
+if (isMac) {
+  try {
+    execSync(`codesign --remove-signature "${targetPath}"`, { stdio: 'inherit' });
+  } catch (signErr) {
+    console.warn('codesign remove-signature warning:', signErr.message);
+  }
+}
+
 const postjectArgs = [
   `"${targetPath}"`,
   'NODE_SEA_BLOB',
@@ -63,7 +72,15 @@ execSync(`npx postject ${postjectArgs.join(' ')}`, {
   stdio: 'inherit',
 });
 
-// Remove signature on Windows if needed or chmod on Unix
+if (isMac) {
+  try {
+    execSync(`codesign --sign - "${targetPath}"`, { stdio: 'inherit' });
+  } catch (signErr) {
+    console.warn('codesign sign warning:', signErr.message);
+  }
+}
+
+// Ensure execute permissions on Unix systems
 if (!isWindows) {
   fs.chmodSync(targetPath, 0o755);
 }

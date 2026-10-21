@@ -1,11 +1,15 @@
-name: Build Standalone Binaries
+name: Build Standalone Binaries & Release
 
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
     branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -16,13 +20,13 @@ jobs:
         include:
           - os: windows-latest
             binary_name: hela-win.exe
-            artifact_name: hela-windows-x64
+            artifact_name: hela-win.exe
           - os: ubuntu-latest
             binary_name: hela-linux
-            artifact_name: hela-linux-x64
+            artifact_name: hela-linux
           - os: macos-latest
             binary_name: hela-macos
-            artifact_name: hela-macos-x64
+            artifact_name: hela-macos
 
     steps:
       - name: Checkout code
@@ -54,3 +58,62 @@ jobs:
         with:
           name: ${{ matrix.artifact_name }}
           path: binaries/${{ matrix.binary_name }}
+
+  release:
+    name: Publish GitHub Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all binary artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-binaries
+
+      - name: Organize release files
+        run: |
+          mkdir -p dist-release
+          cp release-binaries/hela-win.exe/hela-win.exe dist-release/hela-win.exe
+          cp release-binaries/hela-linux/hela-linux dist-release/hela-linux
+          chmod +x dist-release/hela-linux
+          cp release-binaries/hela-macos/hela-macos dist-release/hela-macos
+          chmod +x dist-release/hela-macos
+          ls -la dist-release
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: HelaScript ${{ github.ref_name }}
+          tag_name: ${{ github.ref }}
+          body: |
+            ## 🇱🇰 HelaScript ${{ github.ref_name }}
+            
+            Welcome to the official production release of **HelaScript (`.hela`)** — a modern, AI-native programming language engine designed with spoken Sinhala syntax.
+
+            ### 📦 Standalone Binaries
+            Download and run HelaScript without installing Node.js:
+            * **Windows (x64)**: `hela-win.exe`
+            * **Linux (x64)**: `hela-linux`
+            * **macOS (x64)**: `hela-macos`
+
+            ### 🚀 Quick Start
+            ```bash
+            # Windows
+            ./hela-win.exe program.hela
+            
+            # Linux / macOS
+            chmod +x hela-linux
+            ./hela-linux program.hela
+            
+            # Interactive REPL
+            ./hela-win.exe repl
+            ```
+          files: |
+            dist-release/hela-win.exe
+            dist-release/hela-linux
+            dist-release/hela-macos
+          draft: false
+          prerelease: false
