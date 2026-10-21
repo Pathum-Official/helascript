@@ -1,0 +1,56 @@
+name: Build Standalone Binaries
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            binary_name: hela-win.exe
+            artifact_name: hela-windows-x64
+          - os: ubuntu-latest
+            binary_name: hela-linux
+            artifact_name: hela-linux-x64
+          - os: macos-latest
+            binary_name: hela-macos
+            artifact_name: hela-macos-x64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run test suite
+        run: npm test
+
+      - name: Build standalone executable
+        run: npm run build:binary
+
+      - name: Verify standalone binary execution
+        shell: bash
+        run: |
+          ./binaries/${{ matrix.binary_name }} --version
+          ./binaries/${{ matrix.binary_name }} examples/01_hello.hela
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: binaries/${{ matrix.binary_name }}

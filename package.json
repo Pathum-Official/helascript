@@ -1,0 +1,38 @@
+{
+  "name": "helascript",
+  "version": "1.0.0",
+  "description": "Modern, AI-native programming language designed with spoken Sinhala syntax",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "hela": "./bin/hela.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:binary": "node scripts/build-binary.js",
+    "prepublishOnly": "npm run build",
+    "start": "node ./bin/hela.js",
+    "test": "tsx --test test/**/*.test.ts"
+  },
+  "keywords": [
+    "helascript",
+    "sinhala",
+    "programming-language",
+    "dsl",
+    "compiler",
+    "ast",
+    "interpreter",
+    "sri-lanka"
+  ],
+  "author": "HelaScript Authors",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "@yao-pkg/pkg": "^6.23.0",
+    "esbuild": "^0.28.2",
+    "postject": "^1.0.0-alpha.6",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}
