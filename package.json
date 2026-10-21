@@ -11,6 +11,7 @@
   "scripts": {
     "build": "tsc",
     "build:binary": "node scripts/build-binary.js",
+    "package:extension": "cd vscode-extension && npx -y @vscode/vsce package --no-git-tag-version",
     "prepublishOnly": "npm run build",
     "start": "node ./bin/hela.js",
     "test": "tsx --test test/**/*.test.ts"

@@ -1,14 +1,20 @@
 {
   "name": "helascript-vscode",
   "displayName": "HelaScript Spoken-Sinhala Syntax",
-  "description": "Rich syntax highlighting and language support for HelaScript (.hela) spoken-Sinhala programming language",
+  "description": "Rich syntax highlighting, language support, and file icons for HelaScript (.hela) spoken-Sinhala programming language",
   "version": "1.0.0",
   "publisher": "Pathum-Official",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pathum-Official/helascript.git"
+  },
   "engines": {
     "vscode": "^1.75.0"
   },
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Themes"
   ],
   "icon": "icon.png",
   "contributes": {
@@ -23,7 +29,11 @@
         "extensions": [
           ".hela"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/hela.png",
+          "dark": "./icons/hela.png"
+        }
       }
     ],
     "grammars": [
@@ -31,6 +41,13 @@
         "language": "helascript",
         "scopeName": "source.hela",
         "path": "./syntaxes/helascript.tmLanguage.json"
+      }
+    ],
+    "iconThemes": [
+      {
+        "id": "helascript-icons",
+        "label": "HelaScript Icons",
+        "path": "./icons/icon-theme.json"
       }
     ]
   }

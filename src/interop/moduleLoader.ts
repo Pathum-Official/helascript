@@ -71,7 +71,111 @@ export class ModuleLoader {
       return modEnv.getExports();
     }
 
-    // 2. Try loading as Node.js built-in or CommonJS / NPM module using require
+    // 2. Built-in SQLite Database Support: ගෙන්නන්න db "sqlite" ගෙන්;
+    if (source === 'sqlite' || source === 'node:sqlite' || source === 'db') {
+      try {
+        const { DatabaseSync } = this.require('node:sqlite');
+        const basePath = this.basePath;
+        return {
+          open: (filePath: string = ':memory:') => {
+            const resolved = filePath === ':memory:' ? ':memory:' : path.resolve(basePath, filePath);
+            const rawDb = new DatabaseSync(resolved);
+            return {
+              exec: (sql: string) => rawDb.exec(sql),
+              run: (sql: string, params: any[] = []) => {
+                const stmt = rawDb.prepare(sql);
+                return stmt.run(...(Array.isArray(params) ? params : [params]));
+              },
+              query: (sql: string, params: any[] = []) => {
+                const stmt = rawDb.prepare(sql);
+                return stmt.all(...(Array.isArray(params) ? params : [params]));
+              },
+              get: (sql: string, params: any[] = []) => {
+                const stmt = rawDb.prepare(sql);
+                return stmt.get(...(Array.isArray(params) ? params : [params]));
+              },
+              close: () => rawDb.close(),
+              // Sinhala Aliases
+              ක්‍රියාත්මක: (sql: string) => rawDb.exec(sql),
+              ඇතුළත්: (sql: string, params: any[] = []) => {
+                const stmt = rawDb.prepare(sql);
+                return stmt.run(...(Array.isArray(params) ? params : [params]));
+              },
+              සොයන්න: (sql: string, params: any[] = []) => {
+                const stmt = rawDb.prepare(sql);
+                return stmt.all(...(Array.isArray(params) ? params : [params]));
+              },
+              වසන්න: () => rawDb.close(),
+              raw: rawDb,
+            };
+          },
+          Database: DatabaseSync,
+        };
+      } catch (err: any) {
+        throw new HelaError(
+          `SQLite මොඩියුලය පූරණය කිරීමේදී දෝෂයක්: ${err.message}`,
+          loc
+        );
+      }
+    }
+
+    // 3. Built-in HTTP / Web Server Support: ගෙන්නන්න server "http" ගෙන්;
+    if (source === 'server' || source === 'http' || source === 'node:http') {
+      const http = this.require('http');
+      return {
+        ...http,
+        start: (port: number = 3000, handler: any) => {
+          const server = http.createServer(async (req: any, res: any) => {
+            try {
+              if (handler && typeof handler.call === 'function') {
+                const result = await handler.call(evaluator, [req, res]);
+                if (!res.writableEnded && result !== undefined && result !== null) {
+                  res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                  res.end(String(result));
+                }
+              } else if (typeof handler === 'function') {
+                const result = await handler(req, res);
+                if (!res.writableEnded && result !== undefined && result !== null) {
+                  res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                  res.end(String(result));
+                }
+              }
+            } catch (err: any) {
+              if (!res.writableEnded) {
+                res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+                res.end(`HelaScript Server දෝෂයකි: ${err.message}`);
+              }
+            }
+          });
+          server.listen(port);
+          return server;
+        },
+        createServer: (fn: any) => {
+          const s = http.createServer(async (req: any, res: any) => {
+            if (fn && typeof fn.call === 'function') {
+              await fn.call(evaluator, [req, res]);
+            } else if (typeof fn === 'function') {
+              await fn(req, res);
+            }
+          });
+          const originalListen = s.listen.bind(s);
+          s.listen = (port: any, ...args: any[]) => {
+            const wrappedArgs = args.map((arg: any) => {
+              if (arg && typeof arg.call === 'function') {
+                return async (...cbArgs: any[]) => {
+                  return await arg.call(evaluator, cbArgs);
+                };
+              }
+              return arg;
+            });
+            return originalListen(port, ...wrappedArgs);
+          };
+          return s;
+        },
+      };
+    }
+
+    // 4. Try loading as Node.js built-in or CommonJS / NPM module using require
     try {
       return this.require(source);
     } catch (reqErr: any) {

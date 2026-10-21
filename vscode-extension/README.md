@@ -6,13 +6,14 @@ Rich language support and syntax highlighting for **HelaScript (`.hela`)** — t
 
 ## 🎨 Features
 
+* **Custom `.hela` File Icon**: Dedicated brand icon displaying the official Hela calligraphic emblem beside all `.hela` files in the VS Code file explorer.
 * **Spoken-Sinhala Syntax Highlighting**:
   - Declarations: `දාන්න`, `වෙනස්නොවන`
   - Functions & Flow: `වැඩේ`, `යවන්න`, `නොපෙනෙන`, `ඉන්න`
   - Control Logic: `ඉදින්`, `නැත්තම්`, `කියනකල්`, `හැම`, `නවත්වන්න`, `බිඳින්න`, `ඊළඟ`, `උත්සාහ`, `අල්ලන්න`
   - Modules: `ගෙන්නන්න`, `ගෙන්`
   - Booleans & Null: `ඇත්ත`, `බොරු`, `හිස්`
-  - Standard Functions: `ලියන්න`, `අරගන්න`, `ලබාගන්න`, `දිග`, `වර්ගය`, `නිදන්න`, etc.
+  - Standard Functions: `ලියන්න`, `අරගන්න`, `ලබාගන්න`, `දිග`, `වර්ගය`, `නිදන්න`, `කාලය`, `ගණිතය`
 * **Auto-closing brackets and quotes**
 * **Comment toggling (`Ctrl+/` or `Cmd+/`)**
 * **Code folding support**

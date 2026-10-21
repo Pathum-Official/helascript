@@ -1,0 +1,10 @@
+{
+  "iconDefinitions": {
+    "_hela_file": {
+      "iconPath": "./hela.png"
+    }
+  },
+  "fileExtensions": {
+    "hela": "_hela_file"
+  }
+}

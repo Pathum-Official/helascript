@@ -178,26 +178,60 @@ node bin/hela.js repl
 
 ---
 
-### 4. Imports & Node.js Interop
+### 4. Imports, SQLite & Node.js Interop
 
-Use `ගෙන්නන්න` to import any standard Node.js built-in module, NPM package, or local `.hela` module:
+Use `ගෙන්නන්න` to import native SQLite databases, HTTP web servers, Node.js built-ins, and NPM packages:
 
 ```hela
-// Node.js මොඩියුල ගෙන්වීම
+// 🗄️ SQLite දත්ත සමුදාය (Native In-Memory or File-Based)
+ගෙන්නන්න db "sqlite" ගෙන්;
+
+දාන්න myDb = db.open(":memory:");
+myDb.ක්‍රියාත්මක("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT);");
+myDb.ඇතුළත්("INSERT INTO users (name) VALUES (?);", ["පැතුම්"]);
+දාන්න සියලු_දෙනා = myDb.සොයන්න("SELECT * FROM users;");
+ලියන්න("පරිශීලකයින්:", සියලු_දෙනා);
+myDb.වසන්න();
+
+// 🌐 HTTP වෙබ් සර්වරය (Web Server)
+ගෙන්නන්න server "http" ගෙන්;
+
+දාන්න webServer = server.createServer(වැඩේ(req, res) {
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end("<h1>ආයුබෝවන් HelaScript වෙබ් සර්වරයෙන්! 🇱🇰</h1>");
+});
+webServer.listen(3000, වැඩේ() {
+    ලියන්න("වෙබ් සර්වරය http://localhost:3000 හි ධාවනය වේ...");
+});
+
+// 📦 සම්මත Node.js මොඩියුල
 ගෙන්නන්න fs "fs" ගෙන්;
 ගෙන්නන්න path "path" ගෙන්;
 ගෙන්නන්න os "os" ගෙන්;
 
 ලියන්න("OS වේදිකාව:", os.platform());
 ලියන්න("ගොනුව පවතීද:", fs.existsSync("package.json"));
-
-// Named imports
-ගෙන්නන්න { readFile, existsSync } "fs" ගෙන්;
 ```
 
 ---
 
-### 5. Standard Library
+### 5. VS Code Extension & Custom File Icons
+
+A dedicated VS Code extension is available in `/vscode-extension`:
+* **Custom `.hela` File Icon**: Displays the official calligraphic "හෙළ" logo beside all `.hela` files in VS Code's explorer tree.
+* **Syntax Highlighting**: Full keyword, literal, comment, and function highlighting.
+* **Packaging as `.vsix`**:
+  ```bash
+  # Package the extension into a single installable .vsix file:
+  npm run package:extension
+  
+  # Install the extension locally in VS Code:
+  code --install-extension vscode-extension/helascript-vscode-1.0.0.vsix
+  ```
+
+---
+
+### 6. Standard Library
 
 | ශ්‍රිතය / විචල්‍යය | විස්තරය | උදාහරණය |
 | :--- | :--- | :--- |

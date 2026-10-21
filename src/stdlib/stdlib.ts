@@ -119,16 +119,31 @@ export function setupStandardLibrary(env: Environment): void {
     true
   );
 
-  // කාලය (current timestamp in milliseconds)
-  env.define(
-    'කාලය',
-    new HelaNativeFunction('කාලය', (): number => {
-      return Date.now();
-    }),
-    true
-  );
+  // කාලය (current timestamp and date/time helpers)
+  const timeFn = new HelaNativeFunction('කාලය', (): number => {
+    return Date.now();
+  });
+  Object.assign(timeFn, {
+    දැන්: () => {
+      const d = new Date();
+      const pad = (n: number) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    },
+    වර්ෂය: () => new Date().getFullYear(),
+    මාසය: () => new Date().getMonth() + 1,
+    දිනය: () => new Date().getDate(),
+    පැය: () => new Date().getHours(),
+    මිනිත්තු: () => new Date().getMinutes(),
+    තත්පර: () => new Date().getSeconds(),
+    මිලි_තත්පර: () => Date.now(),
+    year: () => new Date().getFullYear(),
+    month: () => new Date().getMonth() + 1,
+    day: () => new Date().getDate(),
+    now: () => Date.now(),
+  });
+  env.define('කාලය', timeFn, true);
 
-  // ගණිතය (Math library with both English and Sinhala property aliases)
+  // ගණිතය (Math library with English and Sinhala aliases, range random, logs)
   const mathObj: Record<string, any> = {
     pi: Math.PI,
     e: Math.E,
@@ -137,19 +152,31 @@ export function setupStandardLibrary(env: Environment): void {
     ඉහළට: Math.ceil,
     අවම: Math.min,
     උපරිම: Math.max,
-    සසම්භාවී: Math.random,
+    සසම්භාවී: (min?: number, max?: number) => {
+      if (min !== undefined && max !== undefined) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      return Math.random();
+    },
     වර්ගමූලය: Math.sqrt,
     බලය: Math.pow,
     නිරපේක්ෂ: Math.abs,
+    ලඝු: Math.log,
     round: Math.round,
     floor: Math.floor,
     ceil: Math.ceil,
     min: Math.min,
     max: Math.max,
-    random: Math.random,
+    random: (min?: number, max?: number) => {
+      if (min !== undefined && max !== undefined) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      return Math.random();
+    },
     sqrt: Math.sqrt,
     pow: Math.pow,
     abs: Math.abs,
+    log: Math.log,
     sin: Math.sin,
     cos: Math.cos,
     tan: Math.tan,

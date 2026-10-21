@@ -6,6 +6,7 @@ dist/
 build/
 binaries/
 *.exe
+*.vsix
 hela-win.exe
 hela-linux
 hela-macos
