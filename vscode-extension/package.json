@@ -13,8 +13,7 @@
     "vscode": "^1.75.0"
   },
   "categories": [
-    "Programming Languages",
-    "Themes"
+    "Programming Languages"
   ],
   "icon": "icon.png",
   "contributes": {
@@ -40,13 +39,6 @@
         "language": "helascript",
         "scopeName": "source.hela",
         "path": "./syntaxes/helascript.tmLanguage.json"
-      }
-    ],
-    "iconThemes": [
-      {
-        "id": "helascript-icons",
-        "label": "HelaScript Icons",
-        "path": "./icons/icon-theme.json"
       }
     ]
   }
