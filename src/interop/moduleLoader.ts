@@ -137,7 +137,9 @@ export class ModuleLoader {
       } catch (err: any) {
         throw new HelaError(
           `SQLite මොඩියුලය පූරණය කිරීමේදී දෝෂයක්: ${err.message}`,
-          loc
+          loc,
+          undefined,
+          `ස්වදේශීය SQLite සහාය සඳහා Node.js 22.5.0 හෝ ඊට වැඩි විය යුතුය (වත්මන් අනුවාදය: ${process.version}).`
         );
       }
     }

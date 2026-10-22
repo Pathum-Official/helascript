@@ -9,6 +9,9 @@
     "hela": "./bin/hela.js",
     "hela-pkg": "./bin/hela-pkg.js"
   },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "build": "tsc",
     "build:binary": "node scripts/build-binary.js",

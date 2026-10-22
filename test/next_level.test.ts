@@ -2,8 +2,19 @@ import { describe, it } from 'node:test';
 import * as assert from 'node:assert';
 import { run } from '../src/index.js';
 
+let hasSqlite = false;
+try {
+  const sqliteMod = await import('node:sqlite');
+  hasSqlite = typeof sqliteMod.DatabaseSync === 'function';
+} catch {}
+
 describe('HelaScript Next-Level Standard Library Tests', () => {
-  it('creates and queries in-memory SQLite database using Sinhala methods', async () => {
+  it('creates and queries in-memory SQLite database using Sinhala methods', async (t) => {
+    if (!hasSqlite) {
+      t.skip('Node.js >= 22.5.0 required for native node:sqlite');
+      return;
+    }
+
     const code = `
       ගෙන්නන්න db "sqlite" ගෙන්;
       දාන්න myDb = db.open(":memory:");
@@ -25,7 +36,12 @@ describe('HelaScript Next-Level Standard Library Tests', () => {
     assert.strictEqual(result[1].age, 25);
   });
 
-  it('supports standard query/run/exec on SQLite database', async () => {
+  it('supports standard query/run/exec on SQLite database', async (t) => {
+    if (!hasSqlite) {
+      t.skip('Node.js >= 22.5.0 required for native node:sqlite');
+      return;
+    }
+
     const code = `
       ගෙන්නන්න sqlite "sqlite" ගෙන්;
       දාන්න db = sqlite.open(":memory:");
