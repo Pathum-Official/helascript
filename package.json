@@ -6,11 +6,13 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "hela": "./bin/hela.js"
+    "hela": "./bin/hela.js",
+    "hela-pkg": "./bin/hela-pkg.js"
   },
   "scripts": {
     "build": "tsc",
     "build:binary": "node scripts/build-binary.js",
+    "build:web": "node scripts/build-web.js",
     "package:extension": "cd vscode-extension && npx -y @vscode/vsce package --no-git-tag-version",
     "prepublishOnly": "npm run build",
     "start": "node ./bin/hela.js",

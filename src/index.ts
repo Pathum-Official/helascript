@@ -22,6 +22,9 @@ export * from './lexer/token.js';
 export * from './parser/ast.js';
 export * from './parser/parser.js';
 export * from './stdlib/stdlib.js';
+export * from './lsp/protocol.js';
+export * from './lsp/lspService.js';
+export * from './lsp/server.js';
 
 export interface HelaRunOptions extends EvaluatorOptions {
   printErrors?: boolean;

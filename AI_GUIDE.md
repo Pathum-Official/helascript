@@ -71,7 +71,27 @@ HelaScript is not just a string-replacement script; it is a fully-featured progr
 }
 ```
 
-### D. REST API Client, File System & Interoperability
+### D. Error Handling & Concurrency
+```hela
+// 1. Spoken Sinhala Try-Catch Error Handling
+උත්සාහ {
+    දාන්න අන්තර්ගතය = ගොනු.කියවන්න("not_found.txt");
+} අල්ලන්න (දෝෂය) {
+    ලියන්න("දෝෂයක් අල්ලා ගන්නා ලදී:", දෝෂය);
+}
+
+// 2. Custom Error Throwing
+විසිකරන්න "වලංගු නොවන පරිශීලක හැඳුනුම්පතකි!";
+
+// 3. Parallel Async Execution (Promise.all)
+දාන්න ප්‍රතිඵල = ඉන්න සමාන්තර([
+    api.ලබාගන්න("https://jsonplaceholder.typicode.com/todos/1"),
+    api.ලබාගන්න("https://jsonplaceholder.typicode.com/todos/2")
+]);
+ලියන්න("ප්‍රතිඵල 2 සාර්ථකව ලැබුණි:", ප්‍රතිඵල[0].id, ප්‍රතිඵල[1].id);
+```
+
+### E. REST API Client, File System & Interoperability
 ```hela
 // 1. REST API Client
 ගෙන්නන්න api "http" ගෙන්;
@@ -96,21 +116,22 @@ myDb.වසන්න();
 
 ---
 
-## 🛠️ 3. CLI & Usage Guide
+## 🛠️ 3. Tooling Ecosystem (CLI, Package Manager, Web & LSP)
 
-To run HelaScript files or use the interactive shell via terminal:
+### A. Terminal CLI & Enhanced REPL
+- Run files: `hela <file.hela>` or `hela run <file.hela>`
+- Interactive REPL: `hela repl` (featuring persistent history in `~/.hela_history`, colorized values, and multiline support).
+- LSP Daemon: `hela lsp` (JSON-RPC 2.0 language server for IDEs).
 
-```bash
-# Display help and version
-node bin/hela.js --help
-node bin/hela.js --version
+### B. HelaScript Package Manager (`hela-pkg`)
+- `hela-pkg init [name]`: Initialize project manifest `hela.json`.
+- `hela-pkg install <pkg>`: Install from local paths or GitHub repositories (`owner/repo`).
+- `hela-pkg run <script>`: Execute custom scripts defined in `hela.json`.
+- `hela-pkg list`: List installed packages in `hela_modules/`.
 
-# Run a .hela script file
-node bin/hela.js run examples/01_hello.hela
-
-# Launch interactive REPL shell
-node bin/hela.js repl
-```
+### C. Web Playground & Browser Runtime
+- Bundled at `dist/helascript-web.js` with browser shims.
+- Interactive Web Playground at `playground/index.html` with presets, live console capture, token explorer, and AST tree inspector.
 
 ---
 
@@ -124,9 +145,10 @@ When an AI model generates, reviews, or debugs HelaScript code, follow these pri
    - Conditionals: `ඉදින්` (if), `නැත්තම්` (else / else if)
    - Loops: `කියනකල්` (while), `හැම` (for/each)
    - Functions: `වැඩේ` (function), `යවන්න` (return)
-   - Async: `නොපෙනෙන` (async), `ඉන්න` (await)
+   - Async: `නොපෙනෙන` (async), `ඉන්න` (await), `සමාන්තර` (Promise.all)
+   - Error Handling: `උත්සාහ` (try), `අල්ලන්න` / `අල්ලාගන්න` (catch), `විසිකරන්න` (throw)
    - Imports: `ගෙන්නන්න <නම> "<මොඩියුලය>" ගෙන්;`
    - Printing: `ලියන්න(...)`
 2. **Identifiers**: Sinhala variable names (e.g. `දාන්න අගය = 10;`) and alphanumeric ASCII names (e.g. `දාන්න count = 10;`) are both fully supported.
-3. **Execution Runtime**: HelaScript evaluates AST nodes on Node.js, so native JavaScript data types, Node APIs, and npm packages integrate natively.
+3. **Execution Runtime**: HelaScript evaluates AST nodes on Node.js and modern Web Browsers, so native JavaScript data types and APIs integrate seamlessly.
 4. **Diagnostics**: Runtime errors are emitted as [HelaError](file:///c:/Project/HelaScript/src/diagnostics/error.ts) instances formatted in spoken Sinhala with source line highlights.

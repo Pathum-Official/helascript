@@ -10,24 +10,28 @@
 
 <p align="center">
   <a href="#-key-features"><img src="https://img.shields.io/badge/Language-Sinhala-blue.svg" alt="Sinhala Language"/></a>
-  <a href="#-running-tests"><img src="https://img.shields.io/badge/Tests-42%20Passing-brightgreen.svg" alt="Tests"/></a>
+  <a href="#-running-tests"><img src="https://img.shields.io/badge/Tests-72%20Passing%20(100%25)-brightgreen.svg" alt="Tests"/></a>
   <a href="https://github.com/Pathum-Official/helascript/releases"><img src="https://img.shields.io/badge/Release-v1.0.0-orange.svg" alt="Release"/></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License"/></a>
 </p>
 
-HelaScript is a full-fledged programming language engine built in TypeScript and running on Node.js. It features a custom **Unicode-aware Lexer**, **Recursive Descent AST Parser**, **AST Evaluator / Runtime**, **Node.js/NPM Interoperability**, and **natural spoken Sinhala error diagnostics**.
+HelaScript is a full-fledged programming language engine built in TypeScript and running on Node.js and modern Web Browsers. It features a custom **Unicode-aware Lexer**, **Recursive Descent AST Parser**, **AST Evaluator / Runtime**, **Node.js/NPM Interoperability**, **Native Spoken Sinhala Error Diagnostics**, **Built-in Package Manager (`hela-pkg`)**, **Interactive Web Playground**, and **Language Server Protocol (LSP)** foundation.
 
 ---
 
 ## 📑 සාරාංශය (Table of Contents)
 - [✨ Key Features](#-key-features)
 - [🚀 Getting Started](#-getting-started)
+- [📦 HelaScript Package Manager (`hela-pkg`)](#-package-manager-hela-pkg)
+- [🌐 Interactive Web Playground & Browser Runtime](#-interactive-web-playground)
+- [🛠 Developer Experience (Enhanced REPL & LSP)](#-developer-experience-repl--lsp)
 - [📖 Syntax Cheatsheet (ස්වභාවික සිංහල වාක්‍ය ඛණ්ඩ)](#-syntax-cheatsheet)
   - [Variables & Data Types (විචල්‍ය සහ දත්ත වර්ග)](#1-variables--data-types)
   - [Control Flow & Loops (කොන්දේසි සහ ලූප)](#2-control-flow--loops)
-  - [Functions & Async Flow (ක්‍රියා සහ අසමමුහුර්ත ප්‍රවාහය)](#3-functions--async-flow)
-  - [Imports & Node.js Interop (මොඩියුල ගෙන්වීම)](#4-imports--nodejs-interop)
-  - [Standard Library & Built-ins (සම්මත පුස්තකාලය)](#5-standard-library)
+  - [Error Handling & Exceptions (උත්සාහ / අල්ලන්න)](#3-error-handling--exceptions)
+  - [Functions & Async Flow (ක්‍රියා සහ අසමමුහුර්ත ප්‍රවාහය)](#4-functions--async-flow)
+  - [Imports & Node.js Interop (මොඩියුල ගෙන්වීම)](#5-imports--nodejs-interop)
+  - [Standard Library & Built-ins (සම්මත පුස්තකාලය)](#6-standard-library)
 - [💻 CLI & Interactive REPL](#-cli--interactive-repl)
 - [🚨 Error Diagnostics (ස්වභාවික සිංහල දෝෂ පණිවිඩ)](#-error-diagnostics)
 - [🏗 Architecture](#-architecture)
@@ -73,10 +77,78 @@ node bin/hela.js run examples/04_functions.hela
 ```
 
 ### Starting the Interactive REPL
-
 ```bash
 node bin/hela.js repl
 ```
+
+---
+
+## 📦 Package Manager (`hela-pkg`)
+
+HelaScript comes with a native lightweight package manager for managing `.hela` modules and dependencies:
+
+```bash
+# 1. Initialize a new project manifest (hela.json)
+hela-pkg init my-app
+
+# 2. Install a package from a local directory
+hela-pkg install ./my-math-lib
+
+# 3. Install a package from a GitHub repository
+hela-pkg install Pathum-Official/hela-utils
+
+# 4. Run scripts defined in hela.json
+hela-pkg run start
+hela-pkg run test
+
+# 5. List installed packages
+hela-pkg list
+```
+
+In your HelaScript programs, import installed packages directly by name:
+```hela
+ගෙන්නන්න math "my-math-lib" ගෙන්;
+ලියන්න("ප්‍රතිඵලය:", math.වර්ගමූලය(64));
+```
+
+---
+
+## 🌐 Interactive Web Playground
+
+Run HelaScript in any modern browser without installing Node.js or a backend server!
+
+- **Browser Bundle**: Bundled at `dist/helascript-web.js` with isolated shims for browser execution.
+- **Interactive UI**: Located at `playground/index.html`.
+- **Features**:
+  - Code editor with Sinhala syntax presets (Hello World, Async REST API, Fibonacci Recursion, Object Records).
+  - Live console capture window.
+  - Interactive Token Explorer stream.
+  - Full Abstract Syntax Tree (AST) tree inspector.
+
+To open the playground:
+```bash
+# Simply open playground/index.html in any browser:
+# In VS Code / Anti Gravity IDE: Right-click playground/index.html -> Open with Live Server
+```
+
+---
+
+## 🛠 Developer Experience (REPL & LSP)
+
+### 1. Enhanced Terminal REPL
+- **Persistent Command History**: Automatically saves commands to `~/.hela_history` across sessions with Up/Down arrow navigation.
+- **Colorized Syntax Output**: Color highlights for keywords (cyan), strings (green), numbers (yellow), booleans (magenta), and errors (red).
+- **Multi-line Input**: Automatically handles unclosed braces (`{`, `[`, `(`) across lines with continuation prompts (`...`).
+
+### 2. Language Server Protocol (LSP Foundation)
+HelaScript provides a built-in Language Server speaking JSON-RPC 2.0 over standard I/O:
+```bash
+# Launch the HelaScript LSP daemon
+hela lsp
+```
+- **Diagnostics**: Real-time syntax and lexical error detection with Sinhala messages and line/column squiggles.
+- **Auto-completion**: Keywords, standard library modules (`api`, `ගොනු`, `කාලය`, `ගණිතය`), methods (`api.ලබාගන්න`, `ගොනු.කියවන්න`), and local variables.
+- **Hover Documentation**: Detailed spoken-Sinhala documentation, signatures, and code examples when hovering over any keyword or stdlib identifier.
 
 ---
 
@@ -322,27 +394,23 @@ HelaScript provides clear, human-friendly error messages in spoken Sinhala with 
 ```
 c:/Project/HelaScript/
 ├── bin/
-│   └── hela.js                # CLI runner & interactive REPL executable
+│   ├── hela.js                # CLI runner, interactive REPL & LSP daemon
+│   └── hela-pkg.js            # Package manager CLI
 ├── src/
-│   ├── diagnostics/
-│   │   └── error.ts           # HelaError & spoken Sinhala error formatters
-│   ├── lexer/
-│   │   ├── token.ts           # TokenType, Token interface & keywords map
-│   │   └── lexer.ts           # Unicode-aware Lexer with Sinhala ZWJ support
-│   ├── parser/
-│   │   ├── ast.ts             # Abstract Syntax Tree (AST) node definitions
-│   │   └── parser.ts          # Recursive Descent Parser with Pratt expressions
-│   ├── evaluator/
-│   │   ├── environment.ts     # Lexical scoping, bindings, const enforcement
-│   │   ├── values.ts          # Runtime functions, callables, and control signals
-│   │   └── evaluator.ts       # AST Evaluator with async execution & JS this-binding
-│   ├── interop/
-│   │   └── moduleLoader.ts    # Node.js built-ins, NPM, and .hela module loader
-│   ├── stdlib/
-│   │   └── stdlib.ts          # Built-in Sinhala functions (ලියන්න, අරගන්න, etc.)
+│   ├── diagnostics/           # HelaError & spoken Sinhala error formatters
+│   ├── lexer/                 # Unicode-aware Lexer with Sinhala ZWJ support
+│   ├── parser/                # Recursive Descent Parser with Pratt expressions
+│   ├── evaluator/             # Scoped AST Evaluator with async execution
+│   ├── interop/               # Node.js interop, FileSystem, and REST API client
+│   ├── stdlib/                # Built-in Sinhala functions and SQLite DB
+│   ├── pkg/                   # HelaScript Package Manager (hela-pkg)
+│   ├── web/                   # Browser runtime and bundling engine
+│   ├── lsp/                   # Language Server Protocol (LSP) service & stdio server
 │   └── index.ts               # Programmatic TypeScript/JavaScript API
+├── playground/                # Interactive Web Playground (HTML/CSS/JS)
+├── vscode-extension/          # VS Code & Anti Gravity IDE extension
 ├── examples/                  # Comprehensive runnable .hela scripts
-└── test/                      # Unit & integration test suites
+└── test/                      # Unit & integration test suites (17 suites)
 ```
 
 ---
@@ -354,4 +422,4 @@ c:/Project/HelaScript/
 npm test
 ```
 
-All 27 unit & integration tests covering lexing, parsing, scope evaluation, async/await, error diagnostics, and Node.js interop execute with 100% pass rate.
+All **72 unit & integration tests** across **17 test suites** (covering lexing, parsing, scope evaluation, async/await, SQLite DB, REST API client, native File System, error handling, concurrency, package manager, web playground runtime, and LSP) execute with a **100% pass rate**.

@@ -76,6 +76,24 @@ export class ModuleLoader {
       return modEnv.getExports();
     }
 
+    // 2. Check if loading from hela_modules (installed via hela-pkg)
+    const helaModDir = path.resolve(this.basePath, 'hela_modules', source);
+    if (fs.existsSync(helaModDir)) {
+      let entryFile = path.join(helaModDir, 'index.hela');
+      const manifestPath = path.join(helaModDir, 'hela.json');
+      if (fs.existsSync(manifestPath)) {
+        try {
+          const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+          if (manifest.main || manifest.entry) {
+            entryFile = path.resolve(helaModDir, manifest.main || manifest.entry);
+          }
+        } catch {}
+      }
+      if (fs.existsSync(entryFile)) {
+        return this.loadModule(entryFile, loc, evaluator);
+      }
+    }
+
     // 2. Built-in SQLite Database Support: ගෙන්නන්න db "sqlite" ගෙන්;
     if (source === 'sqlite' || source === 'node:sqlite' || source === 'db') {
       try {
