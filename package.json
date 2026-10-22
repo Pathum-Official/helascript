@@ -16,7 +16,7 @@
     "package:extension": "cd vscode-extension && npx -y @vscode/vsce package --no-git-tag-version",
     "prepublishOnly": "npm run build",
     "start": "node ./bin/hela.js",
-    "test": "tsx --test \"test/**/*.test.ts\""
+    "test": "node --import tsx scripts/run-tests.js"
   },
   "keywords": [
     "helascript",
