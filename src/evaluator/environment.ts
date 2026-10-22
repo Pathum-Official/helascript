@@ -32,9 +32,10 @@ export class Environment {
     name: string,
     value: any,
     isConst: boolean = false,
-    loc?: SourceLocation
+    loc?: SourceLocation,
+    allowOverride: boolean = false
   ): void {
-    if (this.bindings.has(name)) {
+    if (this.bindings.has(name) && !allowOverride) {
       throw new HelaError(
         SinhalaErrors.variableAlreadyDeclared(name),
         loc ?? { line: 1, column: 1 },
@@ -42,6 +43,14 @@ export class Environment {
         `වෙනත් නමක් භාවිතා කරන්න, නැතහොත් නව අගයක් පැවරීම (assignment) පමණක් සිදු කරන්න.`
       );
     }
+    this.bindings.set(name, { value, isConst });
+  }
+
+  public hasDirect(name: string): boolean {
+    return this.bindings.has(name);
+  }
+
+  public setDirect(name: string, value: any, isConst: boolean = false): void {
     this.bindings.set(name, { value, isConst });
   }
 

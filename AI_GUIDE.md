@@ -71,12 +71,27 @@ HelaScript is not just a string-replacement script; it is a fully-featured progr
 }
 ```
 
-### D. Node.js Module Interoperability
+### D. REST API Client, File System & Interoperability
 ```hela
-ගෙන්නන්න fs "fs" ගෙන්;
-ගෙන්නන්න path "path" ගෙන්;
+// 1. REST API Client
+ගෙන්නන්න api "http" ගෙන්;
+දාන්න ප්රතිඵලය = api.ලබාගන්න("https://jsonplaceholder.typicode.com/todos/1");
+ලියන්න("API ප්රතිඵලය:", ප්රතිඵලය.title);
 
-ලියන්න("package.json පවතීද:", fs.existsSync("package.json"));
+// 2. Native File System Module
+ගෙන්නන්න ගොනු "fs" ගෙන්;
+ගොනු.ලියන්න("data.txt", "ආයුබෝවන් HelaScript ගොනු පාලනය!");
+දාන්න අන්තර්ගතය = ගොනු.කියවන්න("data.txt");
+ලියන්න("ගොනුවේ අන්තර්ගතය:", අන්තර්ගතය);
+ගොනු.මකන්න("data.txt");
+
+// 3. Native SQLite Database
+ගෙන්නන්න db "sqlite" ගෙන්;
+දාන්න myDb = db.open(":memory:");
+myDb.ක්‍රියාත්මක("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT);");
+myDb.ඇතුළත්("INSERT INTO users (name) VALUES (?);", ["පැතුම්"]);
+දාන්න සාමාජිකයින් = myDb.සොයන්න("SELECT * FROM users;");
+myDb.වසන්න();
 ```
 
 ---

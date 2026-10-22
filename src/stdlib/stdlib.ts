@@ -6,6 +6,8 @@
 import * as readline from 'readline';
 import { Environment } from '../evaluator/environment.js';
 import { HelaNativeFunction } from '../evaluator/values.js';
+import { createFileSystemModule } from '../interop/fileSystem.js';
+import { createHttpClientModule } from '../interop/apiClient.js';
 
 export function setupStandardLibrary(env: Environment): void {
   // ලියන්න (console.log / print)
@@ -183,6 +185,12 @@ export function setupStandardLibrary(env: Environment): void {
   };
   env.define('ගණිතය', mathObj, true);
   env.define('Math', mathObj, true);
+
+  // ගොනු (File System global built-in)
+  env.define('ගොනු', createFileSystemModule(typeof process !== 'undefined' ? process.cwd() : '.'), true);
+
+  // api (REST API Client global built-in)
+  env.define('api', createHttpClientModule(), true);
 
   // process and console for Node environment integration
   if (typeof process !== 'undefined') {

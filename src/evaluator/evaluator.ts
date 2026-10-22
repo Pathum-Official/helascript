@@ -296,11 +296,11 @@ export class Evaluator {
         );
 
         if (typeof stmt.importSpecifier === 'string') {
-          env.define(stmt.importSpecifier, moduleVal, true, loc);
+          env.define(stmt.importSpecifier, moduleVal, true, loc, true);
         } else if (Array.isArray(stmt.importSpecifier)) {
           for (const spec of stmt.importSpecifier) {
             const val = moduleVal ? moduleVal[spec] : undefined;
-            env.define(spec, val, true, loc);
+            env.define(spec, val, true, loc, true);
           }
         }
         return null;
@@ -532,6 +532,9 @@ export class Evaluator {
             }
             return result;
           } catch (callErr: any) {
+            if (callErr instanceof HelaError) {
+              throw callErr;
+            }
             throw new HelaError(
               `කාර්යය ඉටුකිරීමේදී ගැටළුවක්: ${callErr.message}`,
               loc,

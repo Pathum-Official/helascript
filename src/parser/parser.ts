@@ -723,20 +723,27 @@ export class Parser {
           column: lparen.column,
         };
       } else if (this.match(TokenType.DOT)) {
-        // Dot member access: expr.prop
+        // Dot member access: expr.prop (allow identifiers or keywords like යවන්න)
         const dotToken = this.previous();
-        const propToken = this.consume(
-          TokenType.IDENTIFIER,
-          `ගුණාංගයේ (property) නම බලාපොරොත්තු විය`
-        );
+        let propName: string;
+        if (this.isPropertyOrKeyword(this.peek())) {
+          this.advance();
+          propName = this.previous().value;
+        } else {
+          throw new HelaError(
+            `ගුණාංගයේ (property) නම බලාපොරොත්තු විය`,
+            { line: this.peek().line, column: this.peek().column, file: this.filePath },
+            this.source
+          );
+        }
         expr = {
           type: 'MemberExpression',
           object: expr,
           property: {
             type: 'Identifier',
-            name: propToken.value,
-            line: propToken.line,
-            column: propToken.column,
+            name: propName,
+            line: dotToken.line,
+            column: dotToken.column,
           },
           computed: false,
           line: dotToken.line,
@@ -835,7 +842,8 @@ export class Parser {
           let key: string;
           if (this.match(TokenType.STRING)) {
             key = this.previous().literal;
-          } else if (this.match(TokenType.IDENTIFIER)) {
+          } else if (this.isPropertyOrKeyword(this.peek())) {
+            this.advance();
             key = this.previous().value;
           } else {
             throw new HelaError(
@@ -1039,5 +1047,34 @@ export class Parser {
     if (this.check(TokenType.SEMICOLON)) {
       this.advance();
     }
+  }
+
+  private isPropertyOrKeyword(token: Token): boolean {
+    if (!token || token.type === TokenType.EOF) return false;
+    return (
+      token.type === TokenType.IDENTIFIER ||
+      token.type === TokenType.YAVANNA ||
+      token.type === TokenType.WADE ||
+      token.type === TokenType.INNA ||
+      token.type === TokenType.NOPENENA ||
+      token.type === TokenType.DAANNA ||
+      token.type === TokenType.VENAS_NOVANA ||
+      token.type === TokenType.IDIN ||
+      token.type === TokenType.NATTAM ||
+      token.type === TokenType.KIYANAKAL ||
+      token.type === TokenType.HAMA ||
+      token.type === TokenType.GENNANNNA ||
+      token.type === TokenType.GEN ||
+      token.type === TokenType.ATTA ||
+      token.type === TokenType.BORU ||
+      token.type === TokenType.HIS ||
+      token.type === TokenType.BINDINNA ||
+      token.type === TokenType.EELANGA ||
+      token.type === TokenType.UTSAHA ||
+      token.type === TokenType.ALLANNA ||
+      token.type === TokenType.AND ||
+      token.type === TokenType.OR ||
+      token.type === TokenType.NOT
+    );
   }
 }

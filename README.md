@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="#-key-features"><img src="https://img.shields.io/badge/Language-Sinhala-blue.svg" alt="Sinhala Language"/></a>
-  <a href="#-running-tests"><img src="https://img.shields.io/badge/Tests-27%20Passing-brightgreen.svg" alt="Tests"/></a>
+  <a href="#-running-tests"><img src="https://img.shields.io/badge/Tests-42%20Passing-brightgreen.svg" alt="Tests"/></a>
   <a href="https://github.com/Pathum-Official/helascript/releases"><img src="https://img.shields.io/badge/Release-v1.0.0-orange.svg" alt="Release"/></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License"/></a>
 </p>
@@ -204,13 +204,37 @@ webServer.listen(3000, වැඩේ() {
     ලියන්න("වෙබ් සර්වරය http://localhost:3000 හි ධාවනය වේ...");
 });
 
+// 🌐 REST API Client (Fetch Interop)
+ගෙන්නන්න api "http" ගෙන්;
+
+// GET Request: දත්ත ලබාගැනීම
+දාන්න ප්රතිඵලය = api.ලබාගන්න("https://jsonplaceholder.typicode.com/todos/1");
+ලියන්න("API දත්ත:", ප්රතිඵලය.title);
+
+// POST Request: නව දත්ත යැවීම
+දාන්න පිළිතුර = api.යවන්න("https://jsonplaceholder.typicode.com/posts", {
+    title: "HelaScript API",
+    body: "දේශීය සිංහල ක්‍රමලේඛන බලය"
+});
+ලියන්න("ලැබුණු ID:", පිළිතුර.id);
+
+// 📁 ස්වදේශීය ගොනු පද්ධතිය (Native File System)
+ගෙන්නන්න ගොනු "fs" ගෙන්;
+
+// ගොනුවකට ලිවීම සහ කියවීම
+ගොනු.ලියන්න("data.txt", "ආයුබෝවන් HelaScript ගොනු පාලනය!");
+දාන්න අන්තර්ගතය = ගොනු.කියවන්න("data.txt");
+ලියන්න("ගොනුවේ අන්තර්ගතය:", අන්තර්ගතය);
+
+// ගොනුව පවතීදැයි පරීක්ෂා කිරීම සහ මැකීම
+ලියන්න("ගොනුව පවතීද?:", ගොනු.තිබේද("data.txt"));
+ගොනු.මකන්න("data.txt");
+
 // 📦 සම්මත Node.js මොඩියුල
-ගෙන්නන්න fs "fs" ගෙන්;
 ගෙන්නන්න path "path" ගෙන්;
 ගෙන්නන්න os "os" ගෙන්;
 
 ලියන්න("OS වේදිකාව:", os.platform());
-ලියන්න("ගොනුව පවතීද:", fs.existsSync("package.json"));
 ```
 
 ---

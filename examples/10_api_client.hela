@@ -1,0 +1,28 @@
+// HelaScript - හෙළස්ක්‍රිප්ට්
+// 10_api_client.hela: REST API Client & Fetch Interop (REST API සබඳතා)
+
+ගෙන්නන්න api "http" ගෙන්;
+
+ලියන්න("🌐 HelaScript REST API Client පරීක්ෂාව ආරම්භ කරමින්...");
+
+// 1. GET Request: දත්ත ලබාගැනීම
+දාන්න ප්රතිඵලය = api.ලබාගන්න("https://jsonplaceholder.typicode.com/todos/1");
+ලියන්න("✅ API වෙතින් දත්ත ලැබුණි (GET):");
+ලියන්න("- කාර්යය ID:", ප්රතිඵලය.id);
+ලියන්න("- කාර්යයේ මාතෘකාව:", ප්රතිඵලය.title);
+ලියන්න("- අවසන් කර ඇත්ද?:", ප්රතිඵලය.completed);
+
+// 2. POST Request: නව දත්ත යැවීම
+දාන්න යවන_දත්ත = {
+    title: "HelaScript API සහය",
+    body: "දේශීය සිංහල භාෂාවෙන් ලියවුණු නවීන ක්‍රමලේඛන භාෂාව",
+    userId: 1
+};
+
+ලියන්න("\n📤 නව දත්ත සර්වරයට යවමින් (POST)...");
+දාන්න පිළිතුර = api.යවන්න("https://jsonplaceholder.typicode.com/posts", යවන_දත්ත);
+ලියන්න("✅ දත්ත සාර්ථකව සර්වරයෙහි ලියාපදිංචි විය (POST):");
+ලියන්න("- අලුත් ID:", පිළිතුර.id);
+ලියන්න("- මාතෘකාව:", පිළිතුර.title);
+
+ලියන්න("\n🎉 API Client පරීක්ෂාව සාර්ථකව අවසන් විය!");

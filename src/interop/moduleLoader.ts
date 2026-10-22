@@ -8,6 +8,11 @@ import { createRequire } from 'module';
 import * as path from 'path';
 import * as fs from 'fs';
 import { HelaError, SinhalaErrors, SourceLocation } from '../diagnostics/error.js';
+import { createFileSystemModule } from './fileSystem.js';
+import { createHttpClientModule } from './apiClient.js';
+
+export { createFileSystemModule } from './fileSystem.js';
+export { createHttpClientModule } from './apiClient.js';
 
 export class ModuleLoader {
   private require: NodeRequire;
@@ -119,60 +124,22 @@ export class ModuleLoader {
       }
     }
 
-    // 3. Built-in HTTP / Web Server Support: ගෙන්නන්න server "http" ගෙන්;
-    if (source === 'server' || source === 'http' || source === 'node:http') {
+    // 3. Built-in Native File System Support: ගෙන්නන්න ගොනු "fs" ගෙන්;
+    if (source === 'fs' || source === 'node:fs' || source === 'ගොනු') {
+      return createFileSystemModule(this.basePath, loc);
+    }
+
+    // 4. Built-in HTTP Client & Web Server Support: ගෙන්නන්න api "http" ගෙන්; or "api"
+    if (
+      source === 'server' ||
+      source === 'http' ||
+      source === 'node:http' ||
+      source === 'api' ||
+      source === 'client' ||
+      source === 'fetch'
+    ) {
       const http = this.require('http');
-      return {
-        ...http,
-        start: (port: number = 3000, handler: any) => {
-          const server = http.createServer(async (req: any, res: any) => {
-            try {
-              if (handler && typeof handler.call === 'function') {
-                const result = await handler.call(evaluator, [req, res]);
-                if (!res.writableEnded && result !== undefined && result !== null) {
-                  res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-                  res.end(String(result));
-                }
-              } else if (typeof handler === 'function') {
-                const result = await handler(req, res);
-                if (!res.writableEnded && result !== undefined && result !== null) {
-                  res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-                  res.end(String(result));
-                }
-              }
-            } catch (err: any) {
-              if (!res.writableEnded) {
-                res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-                res.end(`HelaScript Server දෝෂයකි: ${err.message}`);
-              }
-            }
-          });
-          server.listen(port);
-          return server;
-        },
-        createServer: (fn: any) => {
-          const s = http.createServer(async (req: any, res: any) => {
-            if (fn && typeof fn.call === 'function') {
-              await fn.call(evaluator, [req, res]);
-            } else if (typeof fn === 'function') {
-              await fn(req, res);
-            }
-          });
-          const originalListen = s.listen.bind(s);
-          s.listen = (port: any, ...args: any[]) => {
-            const wrappedArgs = args.map((arg: any) => {
-              if (arg && typeof arg.call === 'function') {
-                return async (...cbArgs: any[]) => {
-                  return await arg.call(evaluator, cbArgs);
-                };
-              }
-              return arg;
-            });
-            return originalListen(port, ...wrappedArgs);
-          };
-          return s;
-        },
-      };
+      return createHttpClientModule(evaluator, http, loc);
     }
 
     // 4. Try loading as Node.js built-in or CommonJS / NPM module using require
