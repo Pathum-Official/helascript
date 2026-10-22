@@ -28,6 +28,7 @@ export enum TokenType {
   EELANGA = 'EELANGA',           // ඊළඟ / ඉදිරියට (continue)
   UTSAHA = 'UTSAHA',             // උත්සාහ (try)
   ALLANNA = 'ALLANNA',           // අල්ලන්න (catch)
+  VISIKARANNA = 'VISIKARANNA',   // විසිකරන්න (throw)
 
   // Operators
   PLUS = 'PLUS',                 // +
@@ -99,7 +100,11 @@ export const KEYWORDS: Record<string, TokenType> = {
   'ඊළඟ': TokenType.EELANGA,
   'ඉදිරියට': TokenType.EELANGA,
   'උත්සාහ': TokenType.UTSAHA,
+  'උත්සාහ_කරන්න': TokenType.UTSAHA,
   'අල්ලන්න': TokenType.ALLANNA,
+  'අල්ලාගන්න': TokenType.ALLANNA,
+  'විසිකරන්න': TokenType.VISIKARANNA,
+  'විසි_කරන්න': TokenType.VISIKARANNA,
   'සහ': TokenType.AND,
   'හෝ': TokenType.OR,
   'නැත': TokenType.NOT,

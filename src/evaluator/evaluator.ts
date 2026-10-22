@@ -288,6 +288,15 @@ export class Evaluator {
         }
       }
 
+      case 'ThrowStatement': {
+        const val = await this.evaluate(stmt.argument, env);
+        throw new HelaError(
+          typeof val === 'string' ? val : (val?.message || String(val)),
+          loc,
+          this.sourceCode
+        );
+      }
+
       case 'ImportStatement': {
         const moduleVal = await this.moduleLoader.loadModule(
           stmt.source,

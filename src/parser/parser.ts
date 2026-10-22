@@ -32,6 +32,7 @@ import {
   ReturnStatement,
   Statement,
   TryCatchStatement,
+  ThrowStatement,
   UnaryExpression,
   VarDeclaration,
   WhileStatement,
@@ -143,6 +144,11 @@ export class Parser {
     // Try-Catch: 'උත්සාහ' ... 'අල්ලන්න'
     if (this.match(TokenType.UTSAHA)) {
       return this.parseTryCatchStatement();
+    }
+
+    // Throw: 'විසිකරන්න' / 'විසි_කරන්න'
+    if (this.match(TokenType.VISIKARANNA)) {
+      return this.parseThrowStatement();
     }
 
     // Import: 'ගෙන්නන්න'
@@ -400,9 +406,13 @@ export class Parser {
 
   private parseTryCatchStatement(): TryCatchStatement {
     const token = this.previous();
+    // Allow optional 'කරන්න' after 'උත්සාහ'
+    if (this.check(TokenType.IDENTIFIER) && this.peek().value === 'කරන්න') {
+      this.advance();
+    }
     const tryBlock = this.parseBlockStatement();
 
-    this.consume(TokenType.ALLANNA, `'අල්ලන්න' (catch) කොටස බලාපොරොත්තු විය`);
+    this.consume(TokenType.ALLANNA, `'අල්ලන්න' හෝ 'අල්ලාගන්න' (catch) කොටස බලාපොරොත්තු විය`);
 
     let catchVar: string | undefined = undefined;
     if (this.match(TokenType.LPAREN)) {
@@ -421,6 +431,18 @@ export class Parser {
       tryBlock,
       catchVar,
       catchBlock,
+      line: token.line,
+      column: token.column,
+    };
+  }
+
+  private parseThrowStatement(): ThrowStatement {
+    const token = this.previous();
+    const argument = this.parseExpression();
+    this.consumeOptionalSemicolon();
+    return {
+      type: 'ThrowStatement',
+      argument,
       line: token.line,
       column: token.column,
     };

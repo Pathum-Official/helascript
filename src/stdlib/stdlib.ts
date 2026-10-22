@@ -75,6 +75,20 @@ export function setupStandardLibrary(env: Environment): void {
     true
   );
 
+  // සමාන්තර (Promise.all concurrent execution)
+  const parallelFn = new HelaNativeFunction(
+    'සමාන්තර',
+    async (tasks: any[]): Promise<any[]> => {
+      if (!Array.isArray(tasks)) {
+        return [tasks];
+      }
+      return await Promise.all(tasks);
+    },
+    true
+  );
+  env.define('සමාන්තර', parallelFn, true);
+  env.define('parallel', parallelFn, true);
+
   // දිග (length of array, string, or object)
   env.define(
     'දිග',

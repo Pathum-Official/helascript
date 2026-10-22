@@ -15,6 +15,7 @@ export type ASTNodeType =
   | 'BreakStatement'
   | 'ContinueStatement'
   | 'TryCatchStatement'
+  | 'ThrowStatement'
   | 'ImportStatement'
   | 'BlockStatement'
   | 'ExpressionStatement'
@@ -50,6 +51,7 @@ export type Statement =
   | BreakStatement
   | ContinueStatement
   | TryCatchStatement
+  | ThrowStatement
   | ImportStatement
   | BlockStatement
   | ExpressionStatement;
@@ -135,6 +137,11 @@ export interface TryCatchStatement extends BaseNode {
   tryBlock: BlockStatement;
   catchVar?: string;
   catchBlock: BlockStatement;
+}
+
+export interface ThrowStatement extends BaseNode {
+  type: 'ThrowStatement';
+  argument: Expression;
 }
 
 export interface ImportStatement extends BaseNode {
